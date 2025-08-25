@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tour Package Rate Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+      background: #f4f4f9;
+    }
+    h2 {
+      text-align: center;
+      color: #002366;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .checkbox-group {
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 10px;
+      background: #002366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h2>Tour Package Rate Calculator</h2>
+
+  <label>Domestic / International</label>
+  <select id="tripType">
+    <option value="domestic">Domestic</option>
+    <option value="international">International</option>
+  </select>
+
+  <label>No. of Pax</label>
+  <input type="number" id="pax" placeholder="Enter number of travelers">
+
+  <label>Destination</label>
+  <input type="text" id="destination" placeholder="Enter destination">
+
+  <label>Travel Date</label>
+  <input type="date" id="travelDate">
+
+  <label>With Airfare?</label>
+  <select id="airfare">
+    <option value="yes">Yes</option>
+    <option value="no">No</option>
+  </select>
+
+  <label>Tour Package</label>
+  <div class="checkbox-group">
+    <input type="checkbox" id="hotel"> Hotel<br>
+    <input type="checkbox" id="tour"> Tour<br>
+    <input type="checkbox" id="transfers"> Transfers
+  </div>
+
+  <button onclick="calculateRate()">CALCULATE RATE</button>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    function calculateRate() {
+      let pax = parseInt(document.getElementById('pax').value) || 0;
+      let airfare = document.getElementById('airfare').value;
+      let hotel = document.getElementById('hotel').checked;
+      let tour = document.getElementById('tour').checked;
+      let transfers = document.getElementById('transfers').checked;
+
+      // === Sample base rates (you can adjust these) ===
+      let baseRate = 3000; // per pax domestic
+      let baseIntlRate = 10000; // per pax international
+      let airfareRate = 5000; 
+      let hotelRate = 2000; 
+      let tourRate = 1500; 
+      let transferRate = 800; 
+
+      // check trip type
+      let tripType = document.getElementById('tripType').value;
+      let total = 0;
+
+      if (tripType === "domestic") {
+        total += baseRate * pax;
+      } else {
+        total += baseIntlRate * pax;
+      }
+
+      if (airfare === "yes") total += airfareRate * pax;
+      if (hotel) total += hotelRate * pax;
+      if (tour) total += tourRate * pax;
+      if (transfers) total += transferRate * pax;
+
+      let perPax = pax > 0 ? (total / pax) : 0;
+
+      document.getElementById('result').innerHTML = `
+        <h3>Result</h3>
+        <p><b>Destination:</b> ${document.getElementById('destination').value}</p>
+        <p><b>Travel Date:</b> ${document.getElementById('travelDate').value}</p>
+        <p><b>Total Cost:</b> ₱${total.toLocaleString()}</p>
+        <p><b>Rate per Pax:</b> ₱${perPax.toLocaleString()}</p>
+      `;
+    }
+  </script>
+</body>
+</html>
